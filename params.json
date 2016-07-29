@@ -1,0 +1,6 @@
+{
+  "name": "Structural engineering",
+  "tagline": "small library for structural engineering problems",
+  "body": "### Package for Structural Engineering problems\r\n\r\n* 2D Frames and Trusses \r\n* Concrete cross-section calculations\r\n* Concrete M-kappa\r\n\r\n\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
