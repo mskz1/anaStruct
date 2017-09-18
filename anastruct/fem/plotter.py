@@ -282,9 +282,12 @@ class Plotter:
             node = self.system.node_map[k]
             h = 0.1 * max_plot_range * F / self.max_system_point_load
             x, y, len_x, len_y, F = self.__arrow_patch_values(Fx, Fz, node, h)
-
-            self.one_fig.arrow(x, y, len_x, len_y, head_width=h*0.15, head_length=0.2*h, ec='b', fc='orange',
+            #MOD 2017-0918 change color
+            # self.one_fig.arrow(x, y, len_x, len_y, head_width=h*0.15, head_length=0.2*h, ec='b', fc='orange',
+            #                    zorder=11)
+            self.one_fig.arrow(x, y, len_x, len_y, head_width=h*0.15, head_length=0.2*h, color='magenta',
                                zorder=11)
+
             if verbosity == 0:
                 self.one_fig.text(x, y, "F=%d" % F, color='k', fontsize=9, zorder=10)
 
@@ -295,15 +298,22 @@ class Plotter:
 
             node = self.system.node_map[k]
             if v > 0:
+                # self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowleft$', ms=25,
+                #               color='orange')
                 self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowleft$', ms=25,
-                              color='orange')
+                              color='blue')
+
             else:
+                # self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowright$', ms=25,
+                #               color='orange')
                 self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowright$', ms=25,
-                              color='orange')
+                              color='blue')
+
             self.one_fig.text(node.vertex.x + h * 0.2, -node.vertex.z + h * 0.2, "T=%d" % v, color='k',
                               fontsize=9, zorder=10)
 
-    def plot_structure(self, figsize, verbosity, show=False, supports=True, scale=1, offset=(0, 0)):
+    def plot_structure(self, figsize, verbosity, show=False, supports=True, scale=1, offset=(0, 0)
+                        ,title="Structural Model"):
         """
         :param show: (boolean) if True, plt.figure will plot.
         :param supports: (boolean) if True, supports are plotted.
@@ -368,6 +378,12 @@ class Plotter:
             self.__rotating_spring_support_patch(max_plot_range * scale)
             self.__spring_support_patch(max_plot_range * scale)
 
+        #TODO show title of plot 2017-0918 -----------------
+        ttl_offset = max_plot_range * 0.04
+        self.one_fig.text(minxrange + ttl_offset, plusyrange - ttl_offset, title)
+
+
+
         if show:
             # add_loads
             self.__q_load_patch(max_plot_range, verbosity)
@@ -396,6 +412,7 @@ class Plotter:
         y_val = axis_values[1]
         self.one_fig.plot(x_val, y_val, color='b')
 
+
         if node_results:
             self._add_node_values(x_val, y_val, force_1, force_2, digits)
 
@@ -409,7 +426,7 @@ class Plotter:
 
     def axial_force(self, factor, figsize, verbosity, scale, offset, show):
         self.max_force = 0
-        self.plot_structure(figsize, 1, scale=scale, offset=offset)
+        self.plot_structure(figsize, 1, scale=scale, offset=offset,title = "Axial Force")
 
         node_results = True if verbosity == 0 else False
 
@@ -448,7 +465,7 @@ class Plotter:
             return self.fig
 
     def bending_moment(self, factor, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset)
+        self.plot_structure(figsize, 1, scale=scale, offset=offset,title = "Bending Moment")
         self.max_force = 0
         con = len(self.system.element_map[1].bending_moment)
 
@@ -495,7 +512,7 @@ class Plotter:
             return self.fig
 
     def shear_force(self, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset)
+        self.plot_structure(figsize, 1, scale=scale, offset=offset,title = "Shear Force")
         self.max_force = 0
 
         # determine max factor for scaling
@@ -526,7 +543,7 @@ class Plotter:
             return self.fig
 
     def reaction_force(self, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, supports=False, scale=scale, offset=offset)
+        self.plot_structure(figsize, 1, supports=False, scale=scale, offset=offset,title = "Reaction Force")
 
         h = 0.2 * self.max_val
         max_force = 0
@@ -545,9 +562,11 @@ class Plotter:
                 len_x = sol[2]
                 len_y = sol[3]
 
-                self.one_fig.arrow(x, y, len_x, len_y, head_width=h * 0.15, head_length=0.2 * scale, ec='b', fc='orange',
+                #MOD 2017-0918 color
+                # self.one_fig.arrow(x, y, len_x, len_y, head_width=h * 0.15, head_length=0.2 * scale, ec='b', fc='orange',
+                #                    zorder=11)
+                self.one_fig.arrow(x, y, len_x, len_y, head_width=h * 0.15, head_length=0.2 * scale, color='m',
                                    zorder=11)
-
                 if verbosity == 0:
                     self.one_fig.text(x, y, "R=%s" % round(node.Fx, 2), color='k', fontsize=9, zorder=10)
 
@@ -560,8 +579,13 @@ class Plotter:
                 len_x = sol[2]
                 len_y = sol[3]
 
-                self.one_fig.arrow(x, y, len_x, len_y, head_width=h * 0.15, head_length=0.2 * scale, ec='b', fc='orange',
+                #MOD 2017-0918
+
+                # self.one_fig.arrow(x, y, len_x, len_y, head_width=h * 0.15, head_length=0.2 * scale, ec='b', fc='orange',
+                #                    zorder=11)
+                self.one_fig.arrow(x, y, len_x, len_y, head_width=h * 0.15, head_length=0.2 * scale, color='m',
                                    zorder=11)
+
 
                 if verbosity == 0:
                     self.one_fig.text(x, y, "R=%s" % round(node.Fz, 2), color='k', fontsize=9, zorder=10)
@@ -571,14 +595,21 @@ class Plotter:
                 '$...$': render the strings using mathtext
                 """
                 if node.Ty > 0:
+                    #MOD
+                    # self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowleft$', ms=25,
+                    #                   color='orange')
                     self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowleft$', ms=25,
-                                      color='orange')
-                if node.Ty < 0:
-                    self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowright$', ms=25,
-                                      color='orange')
+                                      color='m')
 
+
+                if node.Ty < 0:
+                    #MOD change color 2017-0918
+                    # self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowright$', ms=25,
+                    #                   color='orange')
+                    self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowright$', ms=25,
+                                      color='m')
                 if verbosity == 0:
-                    self.one_fig.text(node.vertex.x + h * 0.2, -node.vertex.z + h * 0.2, "T=%s" % round(node.Ty, 2),
+                    self.one_fig.text(node.vertex.x + h * 0.2, -node.vertex.z + h * 0.2, "M=%s" % round(node.Ty, 2),
                                   color='k', fontsize=9, zorder=10)
         if show:
             self.plot()
@@ -586,7 +617,7 @@ class Plotter:
             return self.fig
 
     def displacements(self, factor, figsize, verbosity, scale, offset, show, linear):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset)
+        self.plot_structure(figsize, 1, scale=scale, offset=offset,title = "Deformed Shape")
         self.max_force = 0
         ax_range = None
         # determine max factor for scaling
