@@ -7,6 +7,11 @@ from plotly.offline import plot_mpl, iplot_mpl, init_notebook_mode
 
 PATCH_SIZE = 0.03
 
+COL_GENERAL_MEMBER ='black'
+COL_TRUSS_MEMBER = 'green'
+COL_SUPPORT ='magenta'
+COL_NODE_ID = 'green'
+COL_ELEM_ID = 'red'
 
 class Plotter:
     def __init__(self, system, mesh, backend):
@@ -56,7 +61,7 @@ class Plotter:
         for node in self.system.supports_fixed:
 
             support_patch = mpatches.Rectangle((node.vertex.x - width * 0.5, - node.vertex.z - width * 0.5),
-                                               width, height, color='r', zorder=9)
+                                               width, height, color=COL_SUPPORT, zorder=9)
             self.one_fig.add_patch(support_patch)
 
     def __hinged_support_patch(self, max_val):
@@ -67,7 +72,7 @@ class Plotter:
             radius = PATCH_SIZE * max_val
             for node in self.system.supports_hinged:
                 support_patch = mpatches.RegularPolygon((node.vertex.x, -node.vertex.z - radius),
-                                                        numVertices=3, radius=radius, color='r', zorder=9)
+                                                        numVertices=3, radius=radius, color=COL_SUPPORT, zorder=9)
                 self.one_fig.add_patch(support_patch)
 
         else:  # backend is plotly
@@ -78,7 +83,7 @@ class Plotter:
             for node in self.system.supports_hinged:
                 x.append(node.vertex.x)
                 y.append(-node.vertex.z - s / 1000)
-            self.one_fig.scatter(x, y, color='r', zorder=9, marker='^', s=s)
+            self.one_fig.scatter(x, y, color=COL_SUPPORT, zorder=9, marker='^', s=s)
 
     def __roll_support_patch(self, max_val):
         """
@@ -92,10 +97,10 @@ class Plotter:
 
             if direction == 2:  # horizontal roll
                 support_patch = mpatches.RegularPolygon((node.vertex.x, -node.vertex.z - radius),
-                                                        numVertices=3, radius=radius, color='r', zorder=9)
+                                                        numVertices=3, radius=radius, color=COL_SUPPORT, zorder=9)
                 self.one_fig.add_patch(support_patch)
                 y = -node.vertex.z - 2 * radius
-                self.one_fig.plot([node.vertex.x - radius, node.vertex.x + radius], [y, y], color='r')
+                self.one_fig.plot([node.vertex.x - radius, node.vertex.x + radius], [y, y], color=COL_SUPPORT)
             elif direction == 1:  # vertical roll
                 center = 0
                 x1 = center + math.cos(math.pi) * radius + node.vertex.x + radius
@@ -108,12 +113,12 @@ class Plotter:
                 triangle = np.array([[x1, z1], [x2, z2], [x3, z3]])
                 # translate the support to the node
 
-                support_patch = mpatches.Polygon(triangle, color='r', zorder=9)
+                support_patch = mpatches.Polygon(triangle, color=COL_SUPPORT, zorder=9)
                 self.one_fig.add_patch(support_patch)
 
                 y = -node.vertex.z - radius
                 self.one_fig.plot([node.vertex.x + radius * 1.5, node.vertex.x + radius * 1.5], [y, y + 2 * radius],
-                                  color='r')
+                                  color=COL_SUPPORT)
             count += 1
 
     def __rotating_spring_support_patch(self, max_val):
@@ -136,11 +141,11 @@ class Plotter:
                 y_val.append(y)
                 count += 1
 
-            self.one_fig.plot(x_val, y_val, color='r', zorder=9)
+            self.one_fig.plot(x_val, y_val, color=COL_SUPPORT, zorder=9)
 
             # Triangle
             support_patch = mpatches.RegularPolygon((node.vertex.x, -node.vertex.z - radius * 3),
-                                                    numVertices=3, radius=radius * 0.9, color='r', zorder=9)
+                                                    numVertices=3, radius=radius * 0.9, color=COL_SUPPORT, zorder=9)
             self.one_fig.add_patch(support_patch)
 
     def __spring_support_patch(self, max_val):
@@ -170,14 +175,14 @@ class Plotter:
             if self.backend == "mpl":
                 # Triangle
                 support_patch = mpatches.RegularPolygon((node.vertex.x, -node.vertex.z - h * 2.6),
-                                                        numVertices=3, radius=h * 0.9, color='r', zorder=10)
+                                                        numVertices=3, radius=h * 0.9, color=COL_SUPPORT, zorder=10)
                 self.one_fig.add_patch(support_patch)
             else:
                 x.append(node.vertex.x)
                 y.append(min(yval))
 
         if self.backend != "mpl":
-            self.one_fig.scatter(x, y, color='r', zorder=9, marker='^', s=s)
+            self.one_fig.scatter(x, y, color=COL_SUPPORT, zorder=9, marker='^', s=s)
             # reset
             x = []
             y = []
@@ -194,7 +199,7 @@ class Plotter:
             if self.backend == "mpl":
                 # Triangle
                 support_patch = mpatches.RegularPolygon((node.vertex.x + h * 1.7, -node.vertex.z - h),
-                                                        numVertices=3, radius=h * 0.9, color='r', zorder=10)
+                                                        numVertices=3, radius=h * 0.9, color=COL_SUPPORT, zorder=10)
                 self.one_fig.add_patch(support_patch)
             else:
                 x.append(node.vertex.x + h * 1.7)
@@ -202,7 +207,7 @@ class Plotter:
 
             if self.backend != "mpl":
                 verts = [(0, 0), (-1, -1), (1, -1)]
-                self.one_fig.scatter(x, y, color='r', zorder=9, marker=verts, s=s)
+                self.one_fig.scatter(x, y, color=COL_SUPPORT, zorder=9, marker=verts, s=s)
 
     def __q_load_patch(self, max_val, verbosity):
         """
@@ -329,7 +334,26 @@ class Plotter:
             axis_values = plot_values_element(el)
             x_val = axis_values[0]
             y_val = axis_values[1]
-            self.one_fig.plot(x_val, y_val, color='black', marker='s')
+
+            # member plot
+            #MOD change truss-member display configuration
+            if el.type == "general":
+                self.one_fig.plot(x_val, y_val, color='black', marker='s')
+            else:   # truss
+                dl = el.l * 0.06  # element-end pin position length
+                x_val_p =[0,0]
+                y_val_p = [0,0]
+                x_val_p[0] = x_val[0] + dl * math.cos(el.ai)
+                x_val_p[-1] = x_val[-1] - dl * math.cos(el.ai)
+                # xval_p= (x_val[0] + x_val[-1]) / 2 - math.sin(el.ai) * factor
+                y_val_p[0] = y_val[0] + dl * math.sin(el.ai)
+                y_val_p[-1] = y_val[-1] - dl * math.sin(el.ai)
+                # self.one_fig.plot(x_val, y_val, color='black')
+                # self.one_fig.plot(x_val, y_val, color='green',lw=1,marker='o',mfc='white')
+                # self.one_fig.plot(x_val_p, y_val_p, color='black', marker='o',markersize = 5, mfc='white')
+                self.one_fig.plot(x_val_p[0],y_val_p[0],color='black',marker='o',markersize=6,mfc="white",fillstyle ='none')
+                self.one_fig.plot(x_val_p[-1], y_val_p[-1],color='black', marker='o', markersize=6, mfc="white", fillstyle='none')
+                self.one_fig.plot(x_val, y_val, color='black')
 
             # determine max values for scaling the plotter
             max_x = np.max(np.abs(x_val)) if np.max(np.abs(x_val)) > max_x else max_x
@@ -359,8 +383,8 @@ class Plotter:
 
                 # add node ID to plot
                 range = max_plot_range * 0.015
-                self.one_fig.text(x_val[0] + range, y_val[0] + range, '%d' % el.node_id1, color='g', fontsize=9, zorder=10)
-                self.one_fig.text(x_val[-1] + range, y_val[-1] + range, '%d' % el.node_id2, color='g', fontsize=9,
+                self.one_fig.text(x_val[0] + range, y_val[0] + range, '%d' % el.node_id1, color=COL_NODE_ID, fontsize=9, zorder=10)
+                self.one_fig.text(x_val[-1] + range, y_val[-1] + range, '%d' % el.node_id2, color=COL_NODE_ID, fontsize=9,
                                   zorder=10)
 
                 # add element ID to plot
@@ -368,7 +392,7 @@ class Plotter:
                 x_val = (x_val[0] + x_val[-1]) / 2 - math.sin(el.ai) * factor
                 y_val = (y_val[0] + y_val[-1]) / 2 + math.cos(el.ai) * factor
 
-                self.one_fig.text(x_val, y_val, str(el.id), color='r', fontsize=9, zorder=10)
+                self.one_fig.text(x_val, y_val, str(el.id), color=COL_ELEM_ID, fontsize=9, zorder=10)
 
         # add supports
         if supports:
@@ -378,10 +402,9 @@ class Plotter:
             self.__rotating_spring_support_patch(max_plot_range * scale)
             self.__spring_support_patch(max_plot_range * scale)
 
-        #TODO show title of plot 2017-0918 -----------------
+        #MOD show title of plot 2017-0918 -----------------
         ttl_offset = max_plot_range * 0.04
         self.one_fig.text(minxrange + ttl_offset, plusyrange - ttl_offset, title)
-
 
 
         if show:
