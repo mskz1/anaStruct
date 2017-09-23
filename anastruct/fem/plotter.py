@@ -7,11 +7,14 @@ from plotly.offline import plot_mpl, iplot_mpl, init_notebook_mode
 
 PATCH_SIZE = 0.03
 
-COL_GENERAL_MEMBER ='black'
+COL_GENERAL_MEMBER = 'black'
 COL_TRUSS_MEMBER = 'green'
-COL_SUPPORT ='magenta'
+COL_SUPPORT = 'magenta'
 COL_NODE_ID = 'green'
 COL_ELEM_ID = 'red'
+
+MK_TRUSS_PIN = dict(color='black', marker='o', markersize=4, mfc="white", fillstyle='none')
+
 
 class Plotter:
     def __init__(self, system, mesh, backend):
@@ -59,7 +62,6 @@ class Plotter:
         width = PATCH_SIZE * max_val
         height = PATCH_SIZE * max_val
         for node in self.system.supports_fixed:
-
             support_patch = mpatches.Rectangle((node.vertex.x - width * 0.5, - node.vertex.z - width * 0.5),
                                                width, height, color=COL_SUPPORT, zorder=9)
             self.one_fig.add_patch(support_patch)
@@ -255,7 +257,7 @@ class Plotter:
                 xt = xa_1 + math.sin(-el.ai) * 0.4 * h * direction
                 yt = ya_1 + math.cos(-el.ai) * 0.4 * h * direction
                 # fc = face color, ec = edge color
-                self.one_fig.arrow(xa_1, ya_1, len_x, len_y, head_width=h*0.25, head_length=0.2*h, ec='g', fc='g')
+                self.one_fig.arrow(xa_1, ya_1, len_x, len_y, head_width=h * 0.25, head_length=0.2 * h, ec='g', fc='g')
                 self.one_fig.text(xt, yt, "q=%d" % el.q_load, color='k', fontsize=9, zorder=10)
 
     @staticmethod
@@ -268,7 +270,7 @@ class Plotter:
         :return: Variables for the matplotlib plotter
         """
 
-        F = (Fx**2 + Fz**2)**0.5
+        F = (Fx ** 2 + Fz ** 2) ** 0.5
         len_x = Fx / F * h
         len_y = -Fz / F * h
         x = node.vertex.x - len_x * 1.2
@@ -283,14 +285,14 @@ class Plotter:
 
         for k in self.system.loads_point:
             Fx, Fz = self.system.loads_point[k]
-            F = (Fx**2 + Fz**2)**0.5
+            F = (Fx ** 2 + Fz ** 2) ** 0.5
             node = self.system.node_map[k]
             h = 0.1 * max_plot_range * F / self.max_system_point_load
             x, y, len_x, len_y, F = self.__arrow_patch_values(Fx, Fz, node, h)
-            #MOD 2017-0918 change color
+            # MOD 2017-0918 change color
             # self.one_fig.arrow(x, y, len_x, len_y, head_width=h*0.15, head_length=0.2*h, ec='b', fc='orange',
             #                    zorder=11)
-            self.one_fig.arrow(x, y, len_x, len_y, head_width=h*0.15, head_length=0.2*h, color='magenta',
+            self.one_fig.arrow(x, y, len_x, len_y, head_width=h * 0.15, head_length=0.2 * h, color='magenta',
                                zorder=11)
 
             if verbosity == 0:
@@ -306,19 +308,19 @@ class Plotter:
                 # self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowleft$', ms=25,
                 #               color='orange')
                 self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowleft$', ms=25,
-                              color='blue')
+                                  color='blue')
 
             else:
                 # self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowright$', ms=25,
                 #               color='orange')
                 self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowright$', ms=25,
-                              color='blue')
+                                  color='blue')
 
             self.one_fig.text(node.vertex.x + h * 0.2, -node.vertex.z + h * 0.2, "T=%d" % v, color='k',
                               fontsize=9, zorder=10)
 
     def plot_structure(self, figsize, verbosity, show=False, supports=True, scale=1, offset=(0, 0)
-                        ,title="Structural Model"):
+                       , title="Structural Model"):
         """
         :param show: (boolean) if True, plt.figure will plot.
         :param supports: (boolean) if True, supports are plotted.
@@ -336,13 +338,13 @@ class Plotter:
             y_val = axis_values[1]
 
             # member plot
-            #MOD change truss-member display configuration
+            # MOD change truss-member display configuration
             if el.type == "general":
                 self.one_fig.plot(x_val, y_val, color='black', marker='s')
-            else:   # truss
+            else:  # truss
                 dl = el.l * 0.06  # element-end pin position length
-                x_val_p =[0,0]
-                y_val_p = [0,0]
+                x_val_p = [0, 0]
+                y_val_p = [0, 0]
                 x_val_p[0] = x_val[0] + dl * math.cos(el.ai)
                 x_val_p[-1] = x_val[-1] - dl * math.cos(el.ai)
                 # xval_p= (x_val[0] + x_val[-1]) / 2 - math.sin(el.ai) * factor
@@ -351,8 +353,9 @@ class Plotter:
                 # self.one_fig.plot(x_val, y_val, color='black')
                 # self.one_fig.plot(x_val, y_val, color='green',lw=1,marker='o',mfc='white')
                 # self.one_fig.plot(x_val_p, y_val_p, color='black', marker='o',markersize = 5, mfc='white')
-                self.one_fig.plot(x_val_p[0],y_val_p[0],color='black',marker='o',markersize=6,mfc="white",fillstyle ='none')
-                self.one_fig.plot(x_val_p[-1], y_val_p[-1],color='black', marker='o', markersize=6, mfc="white", fillstyle='none')
+                # self.one_fig.plot(x_val_p[0],y_val_p[0],color='black',marker='o',markersize=6,mfc="white",fillstyle ='none')
+                self.one_fig.plot(x_val_p[0], y_val_p[0], **MK_TRUSS_PIN)
+                self.one_fig.plot(x_val_p[-1], y_val_p[-1], **MK_TRUSS_PIN)
                 self.one_fig.plot(x_val, y_val, color='black')
 
             # determine max values for scaling the plotter
@@ -376,15 +379,16 @@ class Plotter:
 
         if verbosity == 0:
             for el in self.system.element_map.values():
-
                 axis_values = plot_values_element(el)
                 x_val = axis_values[0]
                 y_val = axis_values[1]
 
                 # add node ID to plot
                 range = max_plot_range * 0.015
-                self.one_fig.text(x_val[0] + range, y_val[0] + range, '%d' % el.node_id1, color=COL_NODE_ID, fontsize=9, zorder=10)
-                self.one_fig.text(x_val[-1] + range, y_val[-1] + range, '%d' % el.node_id2, color=COL_NODE_ID, fontsize=9,
+                self.one_fig.text(x_val[0] + range, y_val[0] + range, '%d' % el.node_id1, color=COL_NODE_ID, fontsize=9,
+                                  zorder=10)
+                self.one_fig.text(x_val[-1] + range, y_val[-1] + range, '%d' % el.node_id2, color=COL_NODE_ID,
+                                  fontsize=9,
                                   zorder=10)
 
                 # add element ID to plot
@@ -402,10 +406,9 @@ class Plotter:
             self.__rotating_spring_support_patch(max_plot_range * scale)
             self.__spring_support_patch(max_plot_range * scale)
 
-        #MOD show title of plot 2017-0918 -----------------
+        # MOD show title of plot 2017-0918 -----------------
         ttl_offset = max_plot_range * 0.04
         self.one_fig.text(minxrange + ttl_offset, plusyrange - ttl_offset, title)
-
 
         if show:
             # add_loads
@@ -435,7 +438,6 @@ class Plotter:
         y_val = axis_values[1]
         self.one_fig.plot(x_val, y_val, color='b')
 
-
         if node_results:
             self._add_node_values(x_val, y_val, force_1, force_2, digits)
 
@@ -449,7 +451,7 @@ class Plotter:
 
     def axial_force(self, factor, figsize, verbosity, scale, offset, show):
         self.max_force = 0
-        self.plot_structure(figsize, 1, scale=scale, offset=offset,title = "Axial Force")
+        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Axial Force")
 
         node_results = True if verbosity == 0 else False
 
@@ -488,7 +490,7 @@ class Plotter:
             return self.fig
 
     def bending_moment(self, factor, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset,title = "Bending Moment")
+        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Bending Moment")
         self.max_force = 0
         con = len(self.system.element_map[1].bending_moment)
 
@@ -497,7 +499,7 @@ class Plotter:
             factor = 0
             for el in self.system.element_map.values():
                 if el.q_load:
-                    m_sag = (el.node_1.Ty - el.node_2.Ty) * 0.5 - 1 / 8 * el.q_load * el.l**2
+                    m_sag = (el.node_1.Ty - el.node_2.Ty) * 0.5 - 1 / 8 * el.q_load * el.l ** 2
                     value_1 = max(abs(el.node_1.Ty), abs(m_sag))
                     value_2 = max(value_1, abs(el.node_2.Ty))
                     factor = self.__set_factor(value_1, value_2)
@@ -535,7 +537,7 @@ class Plotter:
             return self.fig
 
     def shear_force(self, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset,title = "Shear Force")
+        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Shear Force")
         self.max_force = 0
 
         # determine max factor for scaling
@@ -566,7 +568,7 @@ class Plotter:
             return self.fig
 
     def reaction_force(self, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, supports=False, scale=scale, offset=offset,title = "Reaction Force")
+        self.plot_structure(figsize, 1, supports=False, scale=scale, offset=offset, title="Reaction Force")
 
         h = 0.2 * self.max_val
         max_force = 0
@@ -585,7 +587,7 @@ class Plotter:
                 len_x = sol[2]
                 len_y = sol[3]
 
-                #MOD 2017-0918 color
+                # MOD 2017-0918 color
                 # self.one_fig.arrow(x, y, len_x, len_y, head_width=h * 0.15, head_length=0.2 * scale, ec='b', fc='orange',
                 #                    zorder=11)
                 self.one_fig.arrow(x, y, len_x, len_y, head_width=h * 0.15, head_length=0.2 * scale, color='m',
@@ -602,13 +604,12 @@ class Plotter:
                 len_x = sol[2]
                 len_y = sol[3]
 
-                #MOD 2017-0918
+                # MOD 2017-0918
 
                 # self.one_fig.arrow(x, y, len_x, len_y, head_width=h * 0.15, head_length=0.2 * scale, ec='b', fc='orange',
                 #                    zorder=11)
                 self.one_fig.arrow(x, y, len_x, len_y, head_width=h * 0.15, head_length=0.2 * scale, color='m',
                                    zorder=11)
-
 
                 if verbosity == 0:
                     self.one_fig.text(x, y, "R=%s" % round(node.Fz, 2), color='k', fontsize=9, zorder=10)
@@ -618,29 +619,28 @@ class Plotter:
                 '$...$': render the strings using mathtext
                 """
                 if node.Ty > 0:
-                    #MOD
+                    # MOD
                     # self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowleft$', ms=25,
                     #                   color='orange')
                     self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowleft$', ms=25,
                                       color='m')
 
-
                 if node.Ty < 0:
-                    #MOD change color 2017-0918
+                    # MOD change color 2017-0918
                     # self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowright$', ms=25,
                     #                   color='orange')
                     self.one_fig.plot(node.vertex.x, -node.vertex.z, marker=r'$\circlearrowright$', ms=25,
                                       color='m')
                 if verbosity == 0:
                     self.one_fig.text(node.vertex.x + h * 0.2, -node.vertex.z + h * 0.2, "M=%s" % round(node.Ty, 2),
-                                  color='k', fontsize=9, zorder=10)
+                                      color='k', fontsize=9, zorder=10)
         if show:
             self.plot()
         else:
             return self.fig
 
     def displacements(self, factor, figsize, verbosity, scale, offset, show, linear):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset,title = "Deformed Shape")
+        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Deformed Shape")
         self.max_force = 0
         ax_range = None
         # determine max factor for scaling
@@ -667,7 +667,7 @@ class Plotter:
 
                     if index != 0 or index != el.deflection.size:
                         self._add_element_values(axis_values[0], axis_values[1],
-                                                 el.deflection[index] + (x**2 + y**2)**0.5, index, 3)
+                                                 el.deflection[index] + (x ** 2 + y ** 2) ** 0.5, index, 3)
         if show:
             self.plot()
         else:
@@ -760,7 +760,7 @@ def plot_values_bending_moment(element, factor, con):
         if element.q_load or element.dead_load:
             q = element.q_load + element.dead_load if element.q_load else element.dead_load
             x = i * element.l
-            q_part = (-0.5 * -q * x**2 + 0.5 * -q * element.l * x)
+            q_part = (-0.5 * -q * x ** 2 + 0.5 * -q * element.l * x)
 
             x_val[count] += math.sin(-element.ai) * q_part * factor
             y_val[count] += math.cos(-element.ai) * q_part * factor
@@ -808,4 +808,3 @@ def plot_values_deflection(element, factor, ax_range, linear=False):
     #             factor *= 0.1
     #             return plot_values_deflection(element, factor, ax_range, linear)
     return x_val, y_val
-

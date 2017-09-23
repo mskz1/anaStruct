@@ -31,7 +31,8 @@ print('{:-^80}'.format('Nodal Result') )
 
 node_res = mdl.get_node_results_system()
 for x in node_res:
-    print('ID:{:5}  ,Fx:{:8.3f}  ,Fz:{:8.3f}  ,ux:{:8.3f}  ,uy:{:8.3f}  ,phi_y:{:8.3f}'.format(*x))
+    # print(x)
+    print('NodeID={:5} ,Fx={:8.3f} ,Fz={:8.3f} ,Ty={:8.3f} ,ux={:8.3f} ,uz={:8.3f} ,phi_y={:8.3f}'.format(*x))
 # print(mdl.get_node_displacements(2))
 # print(mdl.get_node_displacements(3))
 
@@ -48,6 +49,6 @@ for x in elem_list:
     a = mdl.get_element_results(x)
     # print(a)
     try:
-        print('ID:{id:5},  L:{length:8.3f}, N_1:{N_1:8.3f}  ,N_2:{N_2:8.3f}  ,Mmin:{Mmin:8.3f}  ,Mmax:{Mmax:8.3f}'.format(**a))
+        print('ElemID={id:5},  L={length:8.3f}, N_1={N_1:8.3f}  ,N_2={N_2:8.3f}  ,Mmin={Mmin:8.3f}  ,Mmax={Mmax:8.3f}'.format(**a))
     except KeyError:
-        print('ID:{id:5},  L:{length:8.3f}, N_1:{N_1:8.3f}  ,N_2:{N_2:8.3f} '.format(**a))
+        print('ElemID={id:5},  L={length:8.3f}, N_1={N_1:8.3f}  ,N_2={N_2:8.3f} '.format(**a))
