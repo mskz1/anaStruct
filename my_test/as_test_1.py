@@ -28,14 +28,26 @@ print('{:-^80}'.format('Nodal Result') )
 # for x in mdl.get_node_results_system():
 #	print(x)
 
-for i in mdl.node_map.keys():
-    print(mdl.get_node_results_system(i))
 
+node_res = mdl.get_node_results_system()
+for x in node_res:
+    print('ID:{:5}  ,Fx:{:8.3f}  ,Fz:{:8.3f}  ,ux:{:8.3f}  ,uy:{:8.3f}  ,phi_y:{:8.3f}'.format(*x))
 # print(mdl.get_node_displacements(2))
 # print(mdl.get_node_displacements(3))
 
 # print(mdl.get_element_results(1,verbose=False))
 # print(mdl.get_element_results(2,verbose=False))
 print('{:-^80}'.format('Elemental Result') )
-for x in mdl.get_element_results():
-    print(x)
+# for x in mdl.get_element_results():
+#     print(x)
+#
+
+elem_list = mdl.element_map.keys()
+
+for x in elem_list:
+    a = mdl.get_element_results(x)
+    # print(a)
+    try:
+        print('ID:{id:5},  L:{length:8.3f}, N_1:{N_1:8.3f}  ,N_2:{N_2:8.3f}  ,Mmin:{Mmin:8.3f}  ,Mmax:{Mmax:8.3f}'.format(**a))
+    except KeyError:
+        print('ID:{id:5},  L:{length:8.3f}, N_1:{N_1:8.3f}  ,N_2:{N_2:8.3f} '.format(**a))

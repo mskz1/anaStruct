@@ -53,17 +53,16 @@ ss.show_axial_force()
 ss.show_bending_moment(verbosity=0, scale=1)
 ss.show_displacement(verbosity=0, scale=1)
 
+
+# text output =============================
 print('{:-^80}'.format('Nodal Result') )
 # node_res = ss.get_node_displacements()
 
 node_res = ss.get_node_results_system()
 
 for x in node_res:
-    print('ID:{}  ,Fx:{:8.3f}  ,Fz:{:8.3f}  ,ux:{:8.3f}  ,uy:{:8.3f}  ,phi_y:{:8.3f}'.format(*x))
+    print('ID:{:5}  ,Fx:{:8.3f}  ,Fz:{:8.3f}  ,ux:{:8.3f}  ,uy:{:8.3f}  ,phi_y:{:8.3f}'.format(*x))
 
-# print(x for x in node_res)
-# print(ss.get_node_displacements(2))
-# print(ss.get_node_displacements(3))
 
 print('{:-^80}'.format('Elemental Result') )
 elem_list = ss.element_map.keys()
@@ -72,9 +71,7 @@ for x in elem_list:
     a = ss.get_element_results(x)
     # print(a)
     try:
-        print('ID:{id},  L:{length}, N_1:{N_1:8.3f}  ,N_2:{N_2:8.3f}  ,Mmin:{Mmin:8.3f}  ,Mmax:{Mmax:8.3f}'.format(**a))
+        print('ID:{id:5},  L:{length:8.3f}, N_1:{N_1:8.3f}  ,N_2:{N_2:8.3f}  ,Mmin:{Mmin:8.3f}  ,Mmax:{Mmax:8.3f}'.format(**a))
     except KeyError:
-        print('ID:{id},  L:{length}, N_1:{N_1:8.3f}  ,N_2:{N_2:8.3f} '.format(**a))
+        print('ID:{id:5},  L:{length:8.3f}, N_1:{N_1:8.3f}  ,N_2:{N_2:8.3f} '.format(**a))
 
-# print(ss.get_element_results(1,verbose=False))
-# print(ss.get_element_results(2,verbose=False))
