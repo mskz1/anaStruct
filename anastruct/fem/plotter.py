@@ -13,7 +13,7 @@ COL_SUPPORT = 'magenta'
 COL_NODE_ID = 'green'
 COL_ELEM_ID = 'red'
 
-MK_TRUSS_PIN = dict(color='black', marker='o', markersize=4, mfc="white", fillstyle='none')
+MK_TRUSS_PIN = dict(color='blue', marker='o', markersize=4, mfc="white", fillstyle='none')
 
 
 class Plotter:
@@ -59,12 +59,14 @@ class Plotter:
         :param max_val: max scale of the plot
         """
 
-        width = PATCH_SIZE * max_val
-        height = PATCH_SIZE * max_val
+        width = PATCH_SIZE * max_val*2.0
+        height = PATCH_SIZE * max_val*1.5
         for node in self.system.supports_fixed:
-            support_patch = mpatches.Rectangle((node.vertex.x - width * 0.5, - node.vertex.z - width * 0.5),
-                                               width, height, color=COL_SUPPORT, zorder=9)
+            support_patch = mpatches.Rectangle((node.vertex.x - width * 0.5, - node.vertex.z - height * 1.0),
+                                               width, height, zorder=9,hatch='////',fc='w',ec='m',alpha=0.5)
+
             self.one_fig.add_patch(support_patch)
+            self.one_fig.plot([node.vertex.x - width*0.5,node.vertex.x + width*0.5],[node.vertex.z,node.vertex.z],color=COL_SUPPORT)
 
     def __hinged_support_patch(self, max_val):
         """
@@ -148,6 +150,9 @@ class Plotter:
             # Triangle
             support_patch = mpatches.RegularPolygon((node.vertex.x, -node.vertex.z - radius * 3),
                                                     numVertices=3, radius=radius * 0.9, color=COL_SUPPORT, zorder=9)
+
+
+
             self.one_fig.add_patch(support_patch)
 
     def __spring_support_patch(self, max_val):
@@ -338,9 +343,25 @@ class Plotter:
             y_val = axis_values[1]
 
             # member plot
-            # MOD change truss-member display configuration
+            # MOD change truss-member ,hinged-node display configuration
             if el.type == "general":
-                self.one_fig.plot(x_val, y_val, color='black', marker='s')
+                if el.springs is not None:
+
+                    dl = el.l * 0.06  # element-end pin position length
+                    x_val_p = [0, 0]
+                    y_val_p = [0, 0]
+                    x_val_p[0] = x_val[0] + dl * math.cos(el.ai)
+                    x_val_p[-1] = x_val[-1] - dl * math.cos(el.ai)
+                    y_val_p[0] = y_val[0] + dl * math.sin(el.ai)
+                    y_val_p[-1] = y_val[-1] - dl * math.sin(el.ai)
+
+                    if 1 in el.springs:
+                        self.one_fig.plot(x_val_p[0], y_val_p[0], **MK_TRUSS_PIN)
+                    if 2 in el.springs:
+                        self.one_fig.plot(x_val_p[-1], y_val_p[-1], **MK_TRUSS_PIN)
+
+                self.one_fig.plot(x_val, y_val, color='black', marker='s',ms=4)
+
             else:  # truss
                 dl = el.l * 0.06  # element-end pin position length
                 x_val_p = [0, 0]

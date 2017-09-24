@@ -2,12 +2,12 @@ from anastruct.fem.system import SystemElements
 
 # トラスモデルのテスト その２
 
-#TODO 座標値が小数点の時、微小な差異で別節点となってしまう。
+# 座標値が小数点の時、微小な差異で別節点となってしまう。節点を先に生成することで対処
 
 
-TRUSS_SPAN = 10.
+TRUSS_SPAN = 12.
 TRUSS_DEPTH = 1.8
-NUM_OF_PANEL = 6
+NUM_OF_PANEL = 4
 
 EA_CHORD = 200.
 EI_CHORD = 1000.
@@ -18,35 +18,44 @@ EI_WEB = 1000.
 ss = SystemElements()
 
 del_x = TRUSS_SPAN / NUM_OF_PANEL
-# upper chord member
-p1 = [0, 0]
-p2 = [0, 0]
+
+# upper node
+u_node = []
+x = 0.
+u_node.append([x, 0])
 for i in range(NUM_OF_PANEL):
-    p2[0] = p1[0] + del_x
-    # ss.add_element([p1, p2], EA=EA_CHORD, EI=EI_CHORD)
-    ss.add_truss_element([p1, p2], EA=EA_CHORD)
-    p1 = p2[:]
+    x += del_x
+    u_node.append([x, 0])
+
+# lower node
+l_node = []
+x = del_x / 2
+l_node.append([x, -TRUSS_DEPTH])
+for i in range(NUM_OF_PANEL - 1):
+    x += del_x
+    l_node.append([x, -TRUSS_DEPTH])
+
+# upper chord member
+for i in range(NUM_OF_PANEL):
+    # ss.add_truss_element([u_node[i],u_node[i+1]],EA=EA_CHORD)
+    ss.add_element([u_node[i], u_node[i + 1]], EA=EA_CHORD, EI=EI_CHORD)
+    # ss.add_element([u_node[i],u_node[i+1]], EA=EA_CHORD, EI=EI_CHORD,spring={1: 0,2:0})
 
 # lower chord member
-p1 = [0.5 * del_x, -TRUSS_DEPTH]
-p2 = [0, -TRUSS_DEPTH]
 for i in range(NUM_OF_PANEL - 1):
-    p2[0] = p1[0] + del_x
-    # ss.add_element([p1, p2], EA=EA_CHORD, EI=EI_CHORD)
-    ss.add_truss_element([p1, p2], EA=EA_CHORD)
-    p1 = p2[:]
+    # ss.add_truss_element([l_node[i],l_node[i+1]],EA=EA_CHORD)
+    ss.add_element([l_node[i], l_node[i + 1]], EA=EA_CHORD, EI=EI_CHORD)
+    # ss.add_element([l_node[i],l_node[i+1]], EA=EA_CHORD, EI=EI_CHORD,spring={1: 0,2:0})
 
 # web member
-p1 = [0, 0]
-p2 = [0, -TRUSS_DEPTH]
 for i in range(NUM_OF_PANEL):
-    p2[0] = p1[0] + 0.5 * del_x
-    # ss.add_element([p1, p2], EA=EA_WEB, EI=EI_WEB)
-    ss.add_truss_element([p1, p2], EA=EA_WEB)
-    x1 = p1[0]
-    p1[0] = x1 + del_x
-    # ss.add_element([p2, p1], EA=EA_WEB, EI=EI_WEB)
-    ss.add_truss_element([p2, p1], EA=EA_WEB)
+    # ss.add_truss_element([u_node[i],l_node[i]],EA=EA_WEB)
+    # ss.add_truss_element([l_node[i],u_node[i+1]],EA=EA_WEB)
+    # ss.add_element([u_node[i],l_node[i]], EA=EA_WEB, EI=EI_WEB)
+    # ss.add_element([l_node[i],u_node[i+1]], EA=EA_WEB, EI=EI_WEB)
+    ss.add_element([u_node[i], l_node[i]], EA=EA_WEB, EI=EI_WEB, spring={1: 0, 2: 0})
+    ss.add_element([l_node[i], u_node[i + 1]], EA=EA_WEB, EI=EI_WEB, spring={1: 0, 2: 0})
+
 
 # support
 ss.add_support_hinged(1)
@@ -60,7 +69,6 @@ for i in range(NUM_OF_PANEL + 1):
 ss.solve()
 
 ss.show_structure()
-
 ss.show_reaction_force()
 ss.show_axial_force()
 ss.show_bending_moment()
@@ -87,7 +95,7 @@ for x in elem_list:
     except KeyError:
         print('ElemID={id:5} ,L={length:8.3f} ,N1={N_1:8.3f} ,N2={N_2:8.3f}'.format(**a))
 
-print('{:-^80}'.format('DEBUG OUT'))
-for i in ss.node_map.keys():
-    print(ss.node_map[i])
+    # print('{:-^80}'.format('DEBUG OUT'))
+    # for i in ss.node_map.keys():
+    #     print(ss.node_map[i])
     # print('NodeID={id} ,X={x:16.4f} ,Y={y:16.4f}'.format(ss.node_map[i]))
