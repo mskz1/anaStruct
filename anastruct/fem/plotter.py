@@ -449,6 +449,15 @@ class Plotter:
         self.one_fig.text(x_val[-2] - offset, y_val[-2] + offset, "%s" % round(value_2, digits),
                           fontsize=9, ha='center', va='center', )
 
+    def _add_node_values_axial_force(self, x_val, y_val, value_1, value_2, digits):
+        # offset = self.max_val * 0.015
+        offset = 0
+        x = (x_val[1] + x_val[-2]) / 2
+        y = (y_val[1] + y_val[-2]) / 2
+        self.one_fig.text(x - offset, y + offset, "%s" % round(value_1, digits),
+                          fontsize=9, ha='center', va='center', )
+
+
     def _add_element_values(self, x_val, y_val, value, index, digits=2):
         self.one_fig.text(x_val[index], y_val[index], "%s" % round(value, digits),
                           fontsize=9, ha='center', va='center', )
@@ -461,6 +470,23 @@ class Plotter:
 
         if node_results:
             self._add_node_values(x_val, y_val, force_1, force_2, digits)
+
+    def plot_result_axial_force(self, axis_values, force_1=None, force_2=None, digits=2, node_results=True):
+        # 2017-1021 Add for AFD plot
+        # plot force
+        x_val = axis_values[0]
+        y_val = axis_values[1]
+        if force_1 >= 0:
+            col = 'b'
+        else:
+            col = 'r'
+        self.one_fig.fill(x_val, y_val, color=col, lw=0.7, alpha=0.2)
+
+        if node_results:
+            self._add_node_values_axial_force(x_val, y_val, force_1, force_2, digits)
+
+
+
 
     def plot(self):
         if self.backend == "mpl":
@@ -489,21 +515,23 @@ class Plotter:
                 N1 = el.N_1
                 N2 = el.N_2
 
-                self.plot_result(axis_values, N1, N2, node_results=node_results)
+                self.plot_result_axial_force(axis_values, N1, N2, node_results=node_results)
 
                 point = (el.vertex_2 - el.vertex_1) / 2 + el.vertex_1
                 if el.N_1 < 0:
                     point.displace_polar(alpha=el.ai + 0.5 * math.pi, radius=0.5 * el.N_1 * factor, inverse_z_axis=True)
 
                     if verbosity == 0:
-                        self.one_fig.text(point.x, point.y, "-", ha='center', va='center',
-                                          fontsize=20, color='b')
+                        # self.one_fig.text(point.x, point.y, "-", ha='center', va='center',
+                        #                   fontsize=20, color='b')
+                        pass
                 if el.N_1 > 0:
                     point.displace_polar(alpha=el.ai + 0.5 * math.pi, radius=0.5 * el.N_1 * factor, inverse_z_axis=True)
 
                     if verbosity == 0:
-                        self.one_fig.text(point.x, point.y, "+", ha='center', va='center',
-                                          fontsize=14, color='b')
+                        # self.one_fig.text(point.x, point.y, "+", ha='center', va='center',
+                        #                   fontsize=14, color='b')
+                        pass
 
         if show:
             self.plot()

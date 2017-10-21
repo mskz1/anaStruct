@@ -1,19 +1,19 @@
 from anastruct.fem.system import SystemElements
 
-# トラスモデルのテスト その２
-
+# トラスモデルのテスト その4
+# FAP検証モデル
 # 座標値が小数点の時、微小な差異で別節点となってしまう。節点を先に生成することで対処
 
 
-TRUSS_SPAN = 20.
-TRUSS_DEPTH = 1.8
-NUM_OF_PANEL = 8
+TRUSS_SPAN = 10.
+TRUSS_DEPTH = 1.5
+NUM_OF_PANEL = 5
 
-EA_CHORD = 20000.
-EI_CHORD = 0.5
+EA_CHORD = 20500.
+EI_CHORD = 0.205
 
-EA_WEB = 10000.
-EI_WEB = 0.5
+EA_WEB = 20500.
+EI_WEB = 0.205
 
 ss = SystemElements()
 
@@ -51,11 +51,10 @@ for i in range(NUM_OF_PANEL - 1):
 for i in range(NUM_OF_PANEL):
     # ss.add_truss_element([u_node[i],l_node[i]],EA=EA_WEB)
     # ss.add_truss_element([l_node[i],u_node[i+1]],EA=EA_WEB)
-    # ss.add_element([u_node[i],l_node[i]], EA=EA_WEB, EI=EI_WEB)
-    # ss.add_element([l_node[i],u_node[i+1]], EA=EA_WEB, EI=EI_WEB)
-    ss.add_element([u_node[i], l_node[i]], EA=EA_WEB, EI=EI_WEB, spring={1: 0, 2: 0})
-    ss.add_element([l_node[i], u_node[i + 1]], EA=EA_WEB, EI=EI_WEB, spring={1: 0, 2: 0})
-
+    ss.add_element([u_node[i],l_node[i]], EA=EA_WEB, EI=EI_WEB)
+    ss.add_element([l_node[i],u_node[i+1]], EA=EA_WEB, EI=EI_WEB)
+    # ss.add_element([u_node[i], l_node[i]], EA=EA_WEB, EI=EI_WEB, spring={1: 0, 2: 0})
+    # ss.add_element([l_node[i], u_node[i + 1]], EA=EA_WEB, EI=EI_WEB, spring={1: 0, 2: 0})
 
 # support
 ss.add_support_hinged(1)
@@ -87,6 +86,7 @@ elem_list = ss.element_map.keys()
 
 for x in elem_list:
     a = ss.get_element_results(x)
+    # print(a)
     try:
         print(
             'ElemID={id:5} ,L={length:8.3f} ,N1={N_1:8.3f} ,N2={N_2:8.3f} ,Mmin={Mmin:8.3f} ,Mmax={Mmax:8.3f}'.format(
@@ -94,3 +94,7 @@ for x in elem_list:
     except KeyError:
         print('ElemID={id:5} ,L={length:8.3f} ,N1={N_1:8.3f} ,N2={N_2:8.3f}'.format(**a))
 
+    # print('{:-^80}'.format('DEBUG OUT'))
+    # for i in ss.node_map.keys():
+    #     print(ss.node_map[i])
+    # print('NodeID={id} ,X={x:16.4f} ,Y={y:16.4f}'.format(ss.node_map[i]))

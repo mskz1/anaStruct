@@ -54,21 +54,14 @@ ss.show_bending_moment(verbosity=0, scale=1)
 ss.show_displacement(verbosity=0, scale=1)
 
 print('{:-^80}'.format('Nodal Result') )
-# node_res = ss.get_node_displacements()
 
 node_res = ss.get_node_results_system()
 
 for x in node_res:
     print(x)
 
-# print(x for x in node_res)
-# print(ss.get_node_displacements(2))
-# print(ss.get_node_displacements(3))
-
 print('{:-^80}'.format('Elemental Result') )
 elem_list = ss.element_map.keys()
 for x in elem_list:
     print(ss.get_element_results(x))
 
-# print(ss.get_element_results(1,verbose=False))
-# print(ss.get_element_results(2,verbose=False))
