@@ -688,7 +688,7 @@ class Plotter:
         else:
             return self.fig
 
-    def displacements(self, factor, figsize, verbosity, scale, offset, show, linear):
+    def displacements(self, factor, figsize, verbosity, scale, offset, show, linear,nodal_value = True):
         self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Deformed Shape")
         self.max_force = 0
         ax_range = None
@@ -701,7 +701,6 @@ class Plotter:
                 else:  # element is truss
                     factor = self.__set_factor(u_node, 0)
                 ax_range = self.one_fig.get_xlim()
-
         for el in self.system.element_map.values():
             axis_values = plot_values_deflection(el, factor, ax_range, linear)
             self.plot_result(axis_values, node_results=False)
@@ -715,8 +714,17 @@ class Plotter:
                     y = (-el.node_1.uz + -el.node_2.uz) / 2
 
                     if index != 0 or index != el.deflection.size:
-                        self._add_element_values(axis_values[0], axis_values[1],
+                        if nodal_value == False:
+                            self._add_element_values(axis_values[0], axis_values[1],
                                                  el.deflection[index] + (x ** 2 + y ** 2) ** 0.5, index, 3)
+        if nodal_value == True:
+            for nd in self.system.node_map.values():
+                # self._add_node_values(nd.vertex.x,nd.vertex.y,nd.ux,nd.uz,2)
+                # self.one_fig.text(nd.vertex.x, nd.vertex.y, "%s" % round(nd.ux, 2),
+                #                   fontsize=9, ha='center', va='center', )
+                self.one_fig.text(nd.vertex.x, nd.vertex.y, "{:3.3f},{:3.3f}".format(nd.ux,nd.uz),
+                                  fontsize=9, ha='left', va='top', )
+
         if show:
             self.plot()
         else:
