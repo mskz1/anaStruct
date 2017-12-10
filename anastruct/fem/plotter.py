@@ -15,7 +15,7 @@ COL_ELEM_ID = 'red'
 
 MK_TRUSS_PIN = dict(color='blue', marker='o', markersize=4, mfc="white", fillstyle='none')
 
-
+##
 class Plotter:
     def __init__(self, system, mesh, backend):
         self.system = system
