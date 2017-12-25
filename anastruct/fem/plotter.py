@@ -539,7 +539,7 @@ class Plotter:
             return self.fig
 
     def bending_moment(self, factor, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Bending Moment")
+        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Bending Moment",show=show)
         self.max_force = 0
         con = len(self.system.element_map[1].bending_moment)
 
@@ -586,7 +586,7 @@ class Plotter:
             return self.fig
 
     def shear_force(self, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Shear Force")
+        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Shear Force",show=show)
         self.max_force = 0
 
         # determine max factor for scaling
@@ -617,7 +617,7 @@ class Plotter:
             return self.fig
 
     def reaction_force(self, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, supports=False, scale=scale, offset=offset, title="Reaction Force")
+        self.plot_structure(figsize, 1, supports=False, scale=scale, offset=offset, title="Reaction Force",show=show)
 
         h = 0.2 * self.max_val
         max_force = 0
@@ -689,7 +689,7 @@ class Plotter:
             return self.fig
 
     def displacements(self, factor, figsize, verbosity, scale, offset, show, linear,nodal_value = True):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Deformed Shape")
+        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Deformed Shape",show=show)
         self.max_force = 0
         ax_range = None
         # determine max factor for scaling

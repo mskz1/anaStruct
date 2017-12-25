@@ -10,28 +10,28 @@ ss = SystemElements()
 
 # add beam element
 # lower chord
-ss.add_element([[0, 0], [1, 0]], EA=200, EI=1000)
-ss.add_element([[1, 0], [2, 0]], EA=200, EI=1000)
-ss.add_element([[2, 0], [3, 0]], EA=200, EI=1000)
-ss.add_element([[3, 0], [4, 0]], EA=200, EI=1000)
+ss.add_element([[0, 0], [1, 0]], EA=200, EI=0.0001)
+ss.add_element([[1, 0], [2, 0]], EA=200, EI=0.0001)
+ss.add_element([[2, 0], [3, 0]], EA=200, EI=0.0001)
+ss.add_element([[3, 0], [4, 0]], EA=200, EI=0.0001)
 
 # upper chord
-ss.add_element([[0.5, 1], [1.5, 1]], EA=200, EI=1000)
-ss.add_element([[1.5, 1], [2.5, 1]], EA=200, EI=1000)
-ss.add_element([[2.5, 1], [3.5, 1]], EA=200, EI=1000)
+ss.add_element([[0.5, 1], [1.5, 1]], EA=200, EI=0.0001)
+ss.add_element([[1.5, 1], [2.5, 1]], EA=200, EI=0.0001)
+ss.add_element([[2.5, 1], [3.5, 1]], EA=200, EI=0.0001)
 
 # web
-ss.add_truss_element([[0, 0], [0.5, 1]], EA=100)
-ss.add_truss_element([[0.5, 1], [1, 0]], EA=100)
+ss.add_truss_element([[0, 0], [0.5, 1]], EA=0.0001)
+ss.add_truss_element([[0.5, 1], [1, 0]], EA=0.0001)
 
-ss.add_truss_element([[1, 0], [1.5, 1]], EA=100)
-ss.add_truss_element([[1.5, 1], [2, 0]], EA=100)
+ss.add_truss_element([[1, 0], [1.5, 1]], EA=0.0001)
+ss.add_truss_element([[1.5, 1], [2, 0]], EA=0.0001)
 
-ss.add_truss_element([[2, 0], [2.5, 1]], EA=100)
-ss.add_truss_element([[2.5, 1], [3, 0]], EA=100)
+ss.add_truss_element([[2, 0], [2.5, 1]], EA=0.0001)
+ss.add_truss_element([[2.5, 1], [3, 0]], EA=0.0001)
 
-ss.add_truss_element([[3, 0], [3.5, 1]], EA=100)
-ss.add_truss_element([[3.5, 1], [4, 0]], EA=100)
+ss.add_truss_element([[3, 0], [3.5, 1]], EA=0.0001)
+ss.add_truss_element([[3.5, 1], [4, 0]], EA=0.0001)
 
 # add nodal load
 ss.point_load(6, 0, -5)
