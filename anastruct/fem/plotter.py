@@ -431,6 +431,8 @@ class Plotter:
         ttl_offset = max_plot_range * 0.04
         self.one_fig.text(minxrange + ttl_offset, plusyrange - ttl_offset, title)
 
+
+
         if show:
             # add_loads
             self.__q_load_patch(max_plot_range, verbosity)
@@ -438,6 +440,11 @@ class Plotter:
             self.__moment_load_patch(max_plot_range)
             self.plot()
         else:
+            # add_loads
+            self.__q_load_patch(max_plot_range, verbosity)
+            self.__point_load_patch(max_plot_range, verbosity)
+            self.__moment_load_patch(max_plot_range)
+
             return self.fig
 
     def _add_node_values(self, x_val, y_val, value_1, value_2, digits):
@@ -539,7 +546,7 @@ class Plotter:
             return self.fig
 
     def bending_moment(self, factor, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Bending Moment",show=show)
+        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Bending Moment")
         self.max_force = 0
         con = len(self.system.element_map[1].bending_moment)
 
@@ -586,7 +593,7 @@ class Plotter:
             return self.fig
 
     def shear_force(self, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Shear Force",show=show)
+        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Shear Force")
         self.max_force = 0
 
         # determine max factor for scaling
@@ -617,7 +624,7 @@ class Plotter:
             return self.fig
 
     def reaction_force(self, figsize, verbosity, scale, offset, show):
-        self.plot_structure(figsize, 1, supports=False, scale=scale, offset=offset, title="Reaction Force",show=show)
+        self.plot_structure(figsize, 1, supports=False, scale=scale, offset=offset, title="Reaction Force")
 
         h = 0.2 * self.max_val
         max_force = 0
@@ -689,7 +696,7 @@ class Plotter:
             return self.fig
 
     def displacements(self, factor, figsize, verbosity, scale, offset, show, linear,nodal_value = True):
-        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Deformed Shape",show=show)
+        self.plot_structure(figsize, 1, scale=scale, offset=offset, title="Deformed Shape")
         self.max_force = 0
         ax_range = None
         # determine max factor for scaling

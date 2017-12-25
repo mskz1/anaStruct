@@ -859,7 +859,7 @@ class SystemElements:
         :return: (figure)
         """
         figsize = self.figsize if figsize is None else figsize
-        self.plotter.bending_moment(factor, figsize, verbosity, scale, offset, show)
+        return self.plotter.bending_moment(factor, figsize, verbosity, scale, offset, show)
 
     def show_axial_force(self, factor=None, verbosity=0, scale=1, offset=(0, 0), figsize=None, show=True):
         """
@@ -874,7 +874,7 @@ class SystemElements:
         :return: (figure)
         """
         figsize = self.figsize if figsize is None else figsize
-        self.plotter.axial_force(factor, figsize, verbosity, scale, offset, show)
+        return self.plotter.axial_force(factor, figsize, verbosity, scale, offset, show)
 
     def show_shear_force(self, verbosity=0, scale=1, offset=(0, 0), figsize=None, show=True):
         """
@@ -888,7 +888,7 @@ class SystemElements:
         :return: (figure)
         """
         figsize = self.figsize if figsize is None else figsize
-        self.plotter.shear_force(figsize, verbosity, scale, offset, show)
+        return self.plotter.shear_force(figsize, verbosity, scale, offset, show)
 
     def show_reaction_force(self, verbosity=0, scale=1, offset=(0, 0), figsize=None, show=True):
         """
@@ -902,7 +902,7 @@ class SystemElements:
         :return: (figure)
         """
         figsize = self.figsize if figsize is None else figsize
-        self.plotter.reaction_force(figsize, verbosity, scale, offset, show)
+        return self.plotter.reaction_force(figsize, verbosity, scale, offset, show)
 
     def show_displacement(self, factor=None, verbosity=0, scale=1, offset=(0, 0), figsize=None, show=True,
                           linear=False):
@@ -918,7 +918,7 @@ class SystemElements:
         :return: (figure)
         """
         figsize = self.figsize if figsize is None else figsize
-        self.plotter.displacements(factor, figsize, verbosity, scale, offset, show, linear)
+        return self.plotter.displacements(factor, figsize, verbosity, scale, offset, show, linear)
 
     def get_node_results_system(self, node_id=0):
         """
