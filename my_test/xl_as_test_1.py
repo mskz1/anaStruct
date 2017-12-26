@@ -26,19 +26,20 @@ def test_model():
 
     # output plot
     mdl.solve()
+    w=300
+    h=200
+    fig_model = mdl.show_structure(show=False)
+    sht.pictures.add(fig_model,name="fig_model",update=True,left = 0,top=0,width=w,height=h)
 
-    fig_model = mdl.show_structure(figsize=(6,4), scale=1,show=False)
-    sht.pictures.add(fig_model,name="fig_model",update=True)
+    fig_moment = mdl.show_bending_moment(show=False)
+    sht.pictures.add(fig_moment,name="fig_moment",update=True,left = w+100,top=0,width=w,height=h)
 
-    fig_moment = mdl.show_bending_moment(figsize=(6,4),verbosity=0, scale=1,show=False)
-    sht.pictures.add(fig_moment,name="fig_moment",update=True)
-
-    fig_shear = mdl.show_shear_force(figsize=(6,4),show=False)
-    sht.pictures.add(fig_shear,name='fig_shear',update=True)
+    fig_shear = mdl.show_shear_force(show=False)
+    sht.pictures.add(fig_shear,name='fig_shear',update=True,left = 0,top=h+50,width=w,height=h)
 
 
-    fig_disp = mdl.show_displacement(figsize=(6,4),verbosity=0, scale=1,show=False)
-    sht.pictures.add(fig_disp,name='fig_disp',update=True)
+    fig_disp = mdl.show_displacement(show=False)
+    sht.pictures.add(fig_disp,name='fig_disp',update=True,left = w+100,top=h+50,width=w,height=h)
 
 def test_model2():
     # sht = xw.Book.caller().sheets.active
