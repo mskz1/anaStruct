@@ -22,7 +22,7 @@ kSEC_PROP = 'SEC_PROP'
 kE, kA, kI = ('E', 'A', 'I')
 
 
-def _get_keyword_cell(sht, keyword, max_row=50, offset=0):
+def _get_keyword_cell(sht, keyword, max_row=500, offset=0):
     """keywordが入力されている最初のセルを返す
     デフォルトでは、A列を１行目から探す。他の列を探す場合は、offsetで指定"""
     for i in range(1, max_row):
@@ -69,7 +69,7 @@ def _get_data_num(sht, cell):
     return inc
 
 
-def get_data_group(sht, key_word, max_row=50, offset=0):
+def get_data_group(sht, key_word, max_row=500, offset=0):
     """key_wordで指定したデータ群をdictで返す
     """
     cell = _get_keyword_cell(sht, key_word, max_row, offset)
@@ -94,7 +94,7 @@ def get_data(data, key_src, val, key_target):
     return data[key_target][data[key_src].index(val)]
 
 
-def get_params(sht, key_word, max_row=50, offset=0):
+def get_params(sht, key_word, max_row=500, offset=0):
     """key_wordで指定したデータ群のパラメーター一覧をリストで返す"""
     cell = _get_keyword_cell(sht, key_word, max_row, offset)
     return _get_param_list(sht, cell)
